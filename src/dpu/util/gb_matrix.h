@@ -24,9 +24,28 @@ struct _gb_matrix
     uint32_t ix_size; // exact size of indices and values
 
     /* data */
-    int32_t *h; // pointers: p_size >= 8*(plen+1)
+    int32_t *h; // pointers: p_size >= 8*(plen)
     int32_t *p; // pointers: p_size >= 8*(plen+1)
     int32_t *ix;    // [(indices,values),(indices,values),......]
 };
+/*
+    对于矩阵:[0,1,0;
+             0,0,0;
+             1,0,0;
+             0,0,1];
+    type=BOOL;
+    is_csc=0;
+    sparsity_control=HYPERSPARSE;
+    matrix_id=0
+    plen=3;
+    vlen=3;
+    vdim=4;
+    h_size=16;//预留存储，避免多次分配
+    p_size=16;//预留存储，避免多次分配
+    ix_size=16;//预留存储，避免多次分配
+    h[16]={0,2,3};
+    p[16]={0,1,2,3}
+    ix[16]={1,0,2}
+*/
 typedef struct _gb_matrix *gb_matrix ;
 #endif
