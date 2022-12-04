@@ -27,6 +27,7 @@
 #include "configuration/reconf_handler.h"
 #include "serializers/graphcontext_type.h"
 #include "arithmetic/arithmetic_expression.h"
+#include "dpu/host/dpu_set_pool.h"
 
 //------------------------------------------------------------------------------
 // Minimal supported Redis version
@@ -120,6 +121,7 @@ int RedisModule_OnLoad(RedisModuleCtx *ctx, RedisModuleString **argv, int argc) 
 	if(!QueryCtx_Init())    return REDISMODULE_ERR;
 	if(!ErrorCtx_Init())    return REDISMODULE_ERR;
 	if(!ThreadPools_Init()) return REDISMODULE_ERR;
+	if(!dpu_set_pool_init()) return REDISMODULE_ERR;
 
 	RedisModule_Log(ctx, "notice", "Thread pool created, using %d threads.",
 			ThreadPools_ReadersCount());

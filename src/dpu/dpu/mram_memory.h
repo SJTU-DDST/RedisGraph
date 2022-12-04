@@ -22,4 +22,7 @@
 #define TASKLET_15_SPACE_ADDR ((__mram_ptr void *)(0x3c00000))
 #define TASKLET_16_SPACE_ADDR ((__mram_ptr void *)(0x3e00000))
 
+#define COO_RESULT_OFFSET 0x1000000
+#define COO_RESULT_TRANSPOSE_OFFSET 0x1800000
+
 #endif

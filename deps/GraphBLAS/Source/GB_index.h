@@ -15,7 +15,7 @@
 //------------------------------------------------------------------------------
 
 #ifndef GrB_INDEX_MAX
-#define GrB_INDEX_MAX ((GrB_Index) (1ULL << 60) - 1)
+#define GrB_INDEX_MAX ((GrB_Index) (1ULL << 30) - 1)
 #endif
 
 #define GB_NMAX (GrB_INDEX_MAX + 1)

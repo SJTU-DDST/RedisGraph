@@ -2,12 +2,14 @@
 #define __GB_MATRIX_H
 #include <stdint.h>
 #include "type.h"
+#include "coo_matrix.h"
 
 typedef uint32_t grb_type;
 typedef int MatrixID;
 
 #define GB_MATRIX_OK 0
 #define GB_MATRIX_ERR 1
+#define gb_p_elem_size(type) (sizeof(int32_t))
 
 struct _gb_matrix
 {
@@ -15,18 +17,19 @@ struct _gb_matrix
     uint32_t is_csc; // true if stored by column, false if by row
     uint32_t sparsity_control;
     MatrixID matrix_id;
-    int32_t plen ;          // size of A->p and A->h
-    int32_t vlen ;          // length of each sparse vector
-    int32_t vdim ;          // number of vectors in the matrix
+    uint32_t plen; // size of A->p and A->h
+    uint32_t vlen; // length of each sparse vector
+    uint32_t vdim; // number of vectors in the matrix
+    uint32_t nnz;
 
     uint32_t h_size;  // exact size of A->h
     uint32_t p_size;  // exact size of A->p
     uint32_t ix_size; // exact size of indices and values
 
     /* data */
-    int32_t *h; // pointers: p_size >= 8*(plen)
-    int32_t *p; // pointers: p_size >= 8*(plen+1)
-    int32_t *ix;    // [(indices,values),(indices,values),......]
+    int32_t *h;  // pointers: p_size >= 8*(plen)
+    int32_t *p;  // pointers: p_size >= 8*(plen+1)
+    int32_t *ix; // [(indices,values),(indices,values),......]
 };
 /*
     对于矩阵:[0,1,0;
@@ -47,5 +50,11 @@ struct _gb_matrix
     p[16]={0,1,2,3}
     ix[16]={1,0,2}
 */
-typedef struct _gb_matrix *gb_matrix ;
+typedef struct _gb_matrix *gb_matrix;
+
+inline size_t gb_ix_elem_size(grb_type type);
+gb_matrix gb_sparse_matrix_create(grb_type type, uint32_t is_csc, uint32_t nrows,
+                                  uint32_t ncols, uint32_t ix_size);
+gb_matrix sorted_coo2gb_sparse(coo_matrix coo, uint32_t is_csc, uint32_t nrows, uint32_t ncols);
+void gb_sparse_matrix_dump(const gb_matrix gb);
 #endif

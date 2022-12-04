@@ -23,5 +23,5 @@ typedef struct _gb_matrix_slice_dpu
     __mram_ptr int32_t *p; // pointers: p_size >= 8*(plen+1)
     __mram_ptr int32_t *ix;    // [(indices,values),(indices,values),......]
 } gb_matrix_slice_dpu;
-
+void gb_sparse_matrix_slice_dpu_dump(const gb_matrix_slice_dpu* gbsd);
 #endif

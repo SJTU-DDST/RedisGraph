@@ -4,6 +4,6 @@
 #include "../util/heap.h"
 #include <alloc.h>
 
-heap *heap_wram_init(heap *h, uint32_t capacity, heapType type);
+heap *heap_wram_init(heap *h, uint32_t capacity, heapType type, int transpose);
 
 #endif

@@ -39,7 +39,12 @@ typedef struct _gb_matrix_slice_head
 
 typedef struct _gb_matrix_slice *gb_matrix_slice;
 
-void gb_matrix_slice_head_dump(gb_matrix_slice_head *gbsh);
-void gb_matrix_slice_dump(gb_matrix_slice gbs);
+void gb_matrix_slice_head_init(gb_matrix_slice_head* head,const gb_matrix matrix);
+void gb_matrix_slice_head_set_h(gb_matrix_slice_head* head,uint32_t h_start,uint32_t h_size);
+void gb_matrix_slice_head_set_p(gb_matrix_slice_head* head,uint32_t p_start,uint32_t p_size);
+void gb_matrix_slice_head_set_ix(gb_matrix_slice_head* head,uint32_t ix_start,uint32_t ix_size);
+
+void gb_sparse_matrix_slice_head_dump(const gb_matrix_slice_head *gbsh);
+void gb_sparse_matrix_slice_dump(const gb_matrix_slice gbs);
 
 #endif

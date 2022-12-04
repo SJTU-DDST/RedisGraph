@@ -6,6 +6,9 @@
 
 #include "RG.h"
 #include "rg_matrix.h"
+#include "../../dpu/util/GrB_Matrix2gb_matrix.h"
+#include "../../dpu/host/mxm.h"
+#include "../../dpu/host/dpu_set_pool.h"
 
 GrB_Info RG_mxm                     // C = A * B
 (
@@ -34,7 +37,7 @@ GrB_Info RG_mxm                     // C = A * B
 
 	GrB_Info info;
 	GrB_Index nrows;     // number of rows in result matrix
-	GrB_Index ncols;     // number of columns in result matrix 
+	GrB_Index ncols;     // number of columns in result matrix
 	GrB_Index dp_nvals;  // number of entries in A * 'dp'
 	GrB_Index dm_nvals;  // number of entries in A * 'dm'
 
@@ -50,6 +53,25 @@ GrB_Info RG_mxm                     // C = A * B
 	RG_Matrix_ncols(&ncols, C);
 	GrB_Matrix_nvals(&dp_nvals, dp);
 	GrB_Matrix_nvals(&dm_nvals, dm);
+	GrB_Matrix  _A_TM = RG_MATRIX_TM(A);
+	if((_A_TM) && (_A_TM->sparsity_control % GxB_FULL % GxB_BITMAP / GxB_SPARSE) && (_B->sparsity_control % GxB_FULL % GxB_BITMAP / GxB_SPARSE)){
+		if(!RG_Matrix_Synced(B)){
+			RG_Matrix_wait(B, true);
+		}
+		gb_matrix gb_A_TM,gb_B;
+		gb_matrix gb_C, gb_C_TM;
+		gb_A_TM = GrB_Matrix2gb_matrix(_A_TM);
+		gb_B = GrB_Matrix2gb_matrix(_B);
+
+		dpu_set_context * dsc = dpu_set_apply();
+		mxm_gb_sparse_matrix(dsc, gb_A_TM, gb_B, &gb_C, &gb_C_TM);
+		gb_matrix2GrB_Matrix(gb_C, C->matrix);
+		gb_matrix2GrB_Matrix(gb_C_TM, C->transposed->matrix);
+		dpu_set_release(dsc);
+		info = GrB_SUCCESS;
+		return info;
+	}
+
 
 	if(dm_nvals > 0) {
 		// compute A * 'delta-minus'

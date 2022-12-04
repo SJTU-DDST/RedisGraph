@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "gb_matrix.h": "c",
+        "*.in": "cpp"
+    }
+}
